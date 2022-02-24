@@ -31,6 +31,7 @@ function raw_ptr_factory(typ)
   return raw_ptr
 end
 
+utils.int_ptr = raw_ptr_factory(int)
 utils.float_ptr = raw_ptr_factory(float)
 utils.double_ptr = raw_ptr_factory(double)
 utils.complex_ptr = raw_ptr_factory(complex)

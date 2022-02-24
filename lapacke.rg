@@ -17,6 +17,7 @@ local clib = regentlib.c
 local nan = regentlib.nan(double)
 local utils = require("utils")
 
+int_ptr = raw_ptr_factory(int)
 float_ptr = raw_ptr_factory(float)
 double_ptr = raw_ptr_factory(double)
 complex_ptr = raw_ptr_factory(complex)
@@ -68,6 +69,44 @@ terra dgesvd_cpu_terra(
   return ret
 end
 
+terra dgetrf_cpu_terra(
+    layout   : int,
+    M        : int,
+    N        : int,
+	rectA    : rect2d,
+    prA      : clib.legion_physical_region_t,
+	fldA     : clib.legion_field_id_t,
+	rectIPIV : rect1d,
+    prIPIV   : clib.legion_physical_region_t,
+	fldIPIV  : clib.legion_field_id_t)
+
+  var rawA : double_ptr
+  [get_raw_ptr_factory(2, double, rectA, prA, fldA, rawA, double_ptr)]
+
+  var rawIPIV : int_ptr
+  [get_raw_ptr_factory(1, int, rectIPIV, prIPIV, fldIPIV, rawIPIV, int_ptr)]
+
+  return lapacke.LAPACKE_dgetrf(layout, M, N, rawA.ptr, rawA.offset, rawIPIV.ptr)
+end
+
+terra dgetri_cpu_terra(
+    layout   : int,
+    N        : int,
+	rectA    : rect2d,
+    prA      : clib.legion_physical_region_t,
+	fldA     : clib.legion_field_id_t,
+    rectIPIV : rect1d,
+    prIPIV   : clib.legion_physical_region_t,
+	fldIPIV  : clib.legion_field_id_t)
+
+  var rawA : double_ptr
+  [get_raw_ptr_factory(2, double, rectA, prA, fldA, rawA, double_ptr)]
+
+  var rawIPIV : int_ptr
+  [get_raw_ptr_factory(1, int, rectIPIV, prIPIV, fldIPIV, rawIPIV, int_ptr)]
+
+  return lapacke.LAPACKE_dgetri(layout, N, rawA.ptr, rawA.offset, rawIPIV.ptr)
+end
 
 local tasks_h = "lapacke_tasks.h"
 local tasks_so = "lapacke_tasks.so"

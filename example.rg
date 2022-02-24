@@ -38,8 +38,43 @@ task main()
 
   dgesvd(lapacke.LAPACK_COL_MAJOR, 'A', 'A', A, S, U, VT)
 
+  c.printf("DGESVD\n")
   for i in A.ispace do
     c.printf("A[%d, %d] = %0.3f\n", i.x, i.y, A[i])
+  end
+  c.printf("\n")
+
+  M = 3
+  var B = region(ispace(int2d, {M, M}), double)
+
+  B[{0, 0}] = 1
+  B[{0, 1}] = 2
+  B[{0, 2}] = 3
+
+  B[{1, 0}] = 4
+  B[{1, 1}] = 5
+  B[{1, 2}] = 6
+
+  B[{2, 0}] = 7
+  B[{2, 1}] = 8
+  B[{2, 2}] = 10
+
+  var IPIV = region(ispace(int1d, M), int)
+  fill(IPIV, 0)
+
+  dgetrf(lapacke.LAPACK_COL_MAJOR, B, IPIV)
+
+  c.printf("DGETRF\n")
+  for i in B.ispace do
+    c.printf("B[%d, %d] = %0.3f\n", i.x, i.y, B[i])
+  end
+  c.printf("\n")
+
+  dgetri(lapacke.LAPACK_COL_MAJOR, B, IPIV)
+
+  c.printf("DGETRI\n")
+  for i in B.ispace do
+    c.printf("B[%d, %d] = %0.3f\n", i.x, i.y, B[i])
   end
 
 end

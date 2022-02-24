@@ -26,3 +26,23 @@ where
     reads writes(A),
     writes(S, U, VT)
 end
+
+extern
+task dgetrf(
+    layout : int,
+    A      : region(ispace(int2d), double),
+    IPIV   : region(ispace(int1d), int))
+where
+  reads writes(A),
+  writes(IPIV)
+end
+
+extern
+task dgetri(
+    layout : int,
+    A      : region(ispace(int2d), double),
+    IPIV   : region(ispace(int1d), int))
+where
+  reads writes(A),
+  reads(IPIV)
+end
