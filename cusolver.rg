@@ -27,12 +27,12 @@ local cuda_home = os.getenv("CUDA_HOME")
 terralib.includepath = terralib.includepath .. ";" .. cuda_home .. "/include"
 
 terralib.linklibrary(cuda_home .. "/lib64/libcusolver.so")
-terralib.linklibrary("./libcontext_manager.so")
+terralib.linklibrary(utils.output_dir .. "/liblapack_context_manager.so")
 
 local cuda_runtime = terralib.includec("cuda_runtime.h")
 local cusolver = terralib.includec("cusolverDn.h")
 
-local mgr = terralib.includec("context_manager.h", {"-I", "../"})
+local mgr = terralib.includec("lapack_context_manager.h", {"-I", "./"})
 
 
 terra dgesvd_gpu_terra(
@@ -54,7 +54,7 @@ terra dgesvd_gpu_terra(
     prVT   : clib.legion_physical_region_t,
 	fldVT  : clib.legion_field_id_t)
 
-  var handle : cusolver.cusolverDnHandle_t = mgr.get_handle()
+  var handle : cusolver.cusolverDnHandle_t = mgr.get_solver_handle()
 
   var rawA : double_ptr
   [get_raw_ptr_factory(2, double, rectA, prA, fldA, rawA, double_ptr)]
@@ -98,7 +98,7 @@ terra dgetrf_gpu_terra(
     prIPIV   : clib.legion_physical_region_t,
 	fldIPIV  : clib.legion_field_id_t)
 
-  var handle : cusolver.cusolverDnHandle_t = mgr.get_handle()
+  var handle : cusolver.cusolverDnHandle_t = mgr.get_solver_handle()
 
   var rawA : double_ptr
   [get_raw_ptr_factory(2, double, rectA, prA, fldA, rawA, double_ptr)]
@@ -132,7 +132,7 @@ terra dgetri_gpu_terra(
     prIPIV   : clib.legion_physical_region_t,
 	fldIPIV  : clib.legion_field_id_t)
 
-  var handle : cusolver.cusolverDnHandle_t = mgr.get_handle()
+  var handle : cusolver.cusolverDnHandle_t = mgr.get_solver_handle()
 
   var rawA : double_ptr
   [get_raw_ptr_factory(2, double, rectA, prA, fldA, rawA, double_ptr)]
@@ -166,8 +166,3 @@ terra dgetri_gpu_terra(
   clib.free(Bhost)
   return ret
 end
-
-
-local tasks_h = "cusolver_tasks.h"
-local tasks_so = "cusolver_tasks.so"
-regentlib.save_tasks(tasks_h, tasks_so, nil, nil, nil, nil, false)

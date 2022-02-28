@@ -7,7 +7,7 @@ local lapacke = terralib.includec("lapacke.h", {"-I", "/home/vsyamaj/pkg/include
 local lapack = terralib.includec("lapack_tasks.h", {"-I", "./build"})
 terralib.linklibrary("./build/lapack_tasks.so")
 
-terralib.linklibrary("./build/libcontext_manager.so")
+terralib.linklibrary("./build/liblapack_context_manager.so")
 
 require("lapack")
 

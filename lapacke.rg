@@ -107,7 +107,3 @@ terra dgetri_cpu_terra(
 
   return lapacke.LAPACKE_dgetri(layout, N, rawA.ptr, rawA.offset, rawIPIV.ptr)
 end
-
-local tasks_h = "lapacke_tasks.h"
-local tasks_so = "lapacke_tasks.so"
-regentlib.save_tasks(tasks_h, tasks_so, nil, nil, nil, nil, false)

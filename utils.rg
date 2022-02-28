@@ -14,6 +14,8 @@ for k, v in pairs(arg) do
     utils.lapack_header = arg[k+1]
   elseif v == "--lapack-library" then
     utils.lapack_library = arg[k+1]
+  elseif v == "--output-dir" then
+    utils.output_dir = arg[k+1]
   end
 end
 

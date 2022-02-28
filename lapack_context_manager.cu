@@ -1,6 +1,6 @@
-#include "context_manager.h"
+#include "lapack_context_manager.h"
 
-cusolverDnHandle_t get_handle()
+cusolverDnHandle_t get_solver_handle()
 {
   static __thread cusolverDnHandle_t handle;
 

@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-cusolverDnHandle_t get_handle();
+cusolverDnHandle_t get_solver_handle();
 
 #ifdef __cplusplus
 }
