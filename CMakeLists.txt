@@ -17,8 +17,8 @@ find_path(LAPACK_INCLUDE_DIRS lapacke.h
 set(RegentFlags --lapack-header ${LAPACK_INCLUDE_DIRS} --lapack-library ${LAPACK_LIBRARIES} --output-dir ${PROJECT_BINARY_DIR} -fseparate 1)
 
 add_custom_target(lapack_tasks ALL
-  DEPENDS lapack_tasks.so)
-set(OUTPUTS lapack_tasks.so lapack_tasks.h lapacke_tasks.so lapacke_tasks.h)
+  DEPENDS liblapack_tasks.so)
+set(OUTPUTS liblapack_tasks.so lapack_tasks.h)
 set(SRCS lapack.rg lapack_tasks.rg lapacke.rg utils.rg)
 
 option(USE_CUDA "Enable support for CUDA" OFF)
@@ -28,12 +28,11 @@ if(USE_CUDA)
   add_library(lapack_context_manager SHARED lapack_context_manager.cu)
   target_link_libraries(lapack_context_manager -lcusolver)
   LIST(APPEND RegentFlags --use-gpu)
-  LIST(APPEND OUTPUTS cusolver_tasks.so cusolver_tasks.h)
   LIST(APPEND SRCS lapack_context_manager.cu lapack_context_manager.h cusolver.rg)
   add_dependencies(lapack_tasks lapack_context_manager)
 endif()
 
-add_custom_command(OUTPUT lapack_tasks.so
+add_custom_command(OUTPUT liblapack_tasks.so
   COMMAND regent.py ${CMAKE_CURRENT_LIST_DIR}/lapack_tasks.rg ${RegentFlags}
   DEPENDS ${SRCS}
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

@@ -147,5 +147,5 @@ do
 end
 
 local tasks_h = utils.output_dir .. "/lapack_tasks.h"
-local tasks_so = utils.output_dir .. "/lapack_tasks.so"
+local tasks_so = utils.output_dir .. "/liblapack_tasks.so"
 regentlib.save_tasks(tasks_h, tasks_so, nil, nil, nil, nil, false)
